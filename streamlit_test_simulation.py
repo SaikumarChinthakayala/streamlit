@@ -1,11 +1,8 @@
 import numpy as np
 import streamlit as st
-import matplotlib
-matplotlib.use('agg')
-import matplotlib.pyplot as plt
+import plotly.graph_objects as go
 import scipy.stats as stats
 import satlas as sat
-
 
 # ABC = [Al, Au, Bl, Bu, 0, 0]
 def model(I, J, centre=0., Fwhm=50., Al=-391.5, Au=-82.2, Bl=-650, Bu=-302):
@@ -43,6 +40,7 @@ x = np.linspace(-10000, 10000, 14000)
 Pd_even = plotdata()
 Pd_odd = plotdataodd()
 
+# Initialize the Streamlit app
 st.title("Isotope Spectra Visualization")
 
 # Slider for FWHM
@@ -58,19 +56,21 @@ Pd_even_updated = plotdata(fwhm)
 Pd_odd_updated = plotdataodd(fwhm, Al, Au, Bl, Bu)
 Pd_total = Pd_even_updated + Pd_odd_updated
 
-# Plotting
-fig, ax = plt.subplots(1, 3, figsize=(12, 4))
-ax[0].plot(x, Pd_even_updated, lw=2, color='red')
-ax[0].set_ylim([200, 10000])
-ax[0].set_xlim([-2000, 2000])
-ax[0].set_title("Even Isotope Spectra")
+# Create the plotly figures
+fig_even = go.Figure()
+fig_odd = go.Figure()
+fig_total = go.Figure()
 
-ax[1].plot(x, Pd_odd_updated, lw=2, color='green')
-ax[1].set_ylim([200, 10000])
-ax[1].set_title("105Pd(Odd) Isotope Spectra")
+fig_even.add_trace(go.Scatter(x=x, y=Pd_even_updated, mode="lines", name="Even Isotope Spectra"))
+fig_odd.add_trace(go.Scatter(x=x, y=Pd_odd_updated, mode="lines", name="105Pd(Odd) Isotope Spectra"))
+fig_total.add_trace(go.Scatter(x=x, y=Pd_total, mode="lines", name="Total Spectra"))
 
-ax[2].plot(x, Pd_total, lw=2, color='brown')
-ax[2].set_ylim([200, 10000])
-ax[2].set_title("Total Spectra")
+# Update layout
+fig_even.update_layout(title="Even Isotope Spectra", xaxis_title="x", yaxis_title="Intensity")
+fig_odd.update_layout(title="105Pd(Odd) Isotope Spectra", xaxis_title="x", yaxis_title="Intensity")
+fig_total.update_layout(title="Total Spectra", xaxis_title="x", yaxis_title="Intensity")
 
-st.pyplot(fig)
+# Display the plots in Streamlit
+st.plotly_chart(fig_even)
+st.plotly_chart(fig_odd)
+st.plotly_chart(fig_total)
