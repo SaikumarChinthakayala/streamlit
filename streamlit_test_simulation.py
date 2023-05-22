@@ -1,8 +1,11 @@
 import numpy as np
 import streamlit as st
+import matplotlib
+matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import scipy.stats as stats
 import satlas as sat
+
 
 # ABC = [Al, Au, Bl, Bu, 0, 0]
 def model(I, J, centre=0., Fwhm=50., Al=-391.5, Au=-82.2, Bl=-650, Bu=-302):
