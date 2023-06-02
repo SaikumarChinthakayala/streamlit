@@ -93,7 +93,14 @@ def convert_quantities(wavelength, wavelength_unit, frequency, frequency_unit, w
         frequency = wavelength_to_frequency(wavelength, wavelength_unit, speed_of_light)
 
     return wavelength, frequency, wavenumber
-
+def doppler_correction(mass, laser, Vs, Vc):
+    mass=float(mass)*931494102.42
+    laser=2*float(laser)*2.99792458*1e10
+    volt=float(Vc)-float(Vs)+15
+    a=volt/mass
+    c=(1+a+((2*a)+a**2)**0.5)
+    cor_laser=laser*c
+    return cor_laser,c,a
 # Streamlit app
 def main():
     st.title("Conversion Calculator")
@@ -131,5 +138,44 @@ def main():
     converted_frequency.text_input("Frequency Result", value=str(float(converted_frequency_value)*anti_conversion_factors[frequency_unit]))
     converted_wavenumber.text_input("Wavenumber Result", value=str(float(converted_wavenumber_value)/anti_conversion_factors[wavenumber_unit]))
 
+    st.title("Doppler calculator")
+    mass = st.text_input("Mass of the isotope(in amu)")
+    laser=st.text_input("Laser frequncy (in cm-1)(will be doubled)")
+    Vs=st.text_input("Scanning Voltage")
+    Vc=st.text_input("Cooler Voltage")
+    st.write("Doppler corrected frequency:")
+    if st.button("Convert"):
+        cor_freq=doppler_correction(mass,laser,Vs,Vc)[0]
+        C=doppler_correction(mass,laser,Vs,Vc)[1]
+        alp=doppler_correction(mass,laser,Vs,Vc)[2]
+    else:
+        cor_freq=0
+        C=0
+        alp=0
+
+    st.text_input("Doppler corrected frequency",value=str(cor_freq))
+    st.text_input("Doppler factor",value=str(C))
+    st.text_input("Alpha",value=str(alp))
+
+def calculate_doppler_corrected_freq(coolervoltage, scanningvoltage, mass, laserwavenumber):
+    laserfreq = laserwavenumber * 2.99792458 * 1e10
+    alpha = (coolervoltage - scanningvoltage + 15.) / (mass * 931494102.42)
+    DopplerCorrectedFreq = laserfreq * (1 + alpha + (2 * alpha + alpha**2)**0.5)
+    return DopplerCorrectedFreq
+
+def main1():
+    st.title("Doppler Corrected Frequency Calculator")
+
+    coolervoltage = st.number_input("Cooler Voltage (V)", value=0.0)
+    scanningvoltage = st.number_input("Scanning Voltage (V)", value=0.0)
+    mass = st.number_input("Mass of Isotope (amu)", value=0.0)
+    laserwavenumber = st.number_input("Laser Wavenumber (cm-1)", value=0.0)
+
+    if st.button("Calculate"):
+        DopplerCorrectedFreq = calculate_doppler_corrected_freq(coolervoltage, scanningvoltage, mass, laserwavenumber)
+        st.success(f"The Doppler Corrected Frequency is: {DopplerCorrectedFreq}")
+    
+
+
 if __name__ == "__main__":
-    main()
+    main1()
