@@ -134,9 +134,9 @@ def main():
     
     st.write("Converted Results:")
     converted_wavelength, converted_frequency, converted_wavenumber = st.columns(3)
-    converted_wavelength.number_input("Wavelength Result", value=str(float(converted_wavelength_value)*anti_conversion_factors[wavelength_unit]))
-    converted_frequency.number_input("Frequency Result", value=str(float(converted_frequency_value)*anti_conversion_factors[frequency_unit]))
-    converted_wavenumber.number_input("Wavenumber Result", value=str(float(converted_wavenumber_value)/anti_conversion_factors[wavenumber_unit]))
+    converted_wavelength.text_input("Wavelength Result", value=str(float(converted_wavelength_value)*anti_conversion_factors[wavelength_unit]))
+    converted_frequency.text_input("Frequency Result", value=str(float(converted_frequency_value)*anti_conversion_factors[frequency_unit]))
+    converted_wavenumber.text_input("Wavenumber Result", value=str(float(converted_wavenumber_value)/anti_conversion_factors[wavenumber_unit]))
 
     st.title("Doppler calculator")
     mass = st.number_input("Mass of the isotope(in amu)")
@@ -153,9 +153,9 @@ def main():
         C=0
         alp=0
 
-    st.number_input("Doppler corrected frequency",value=str(cor_freq))
-    st.number_input("Doppler factor",value=str(C))
-    st.number_input("Alpha",value=str(alp))
+    st.text_input("Doppler corrected frequency",value=str(cor_freq))
+    st.text_input("Doppler factor",value=str(C))
+    st.text_input("Alpha",value=str(alp))
 
 
     
