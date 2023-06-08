@@ -108,15 +108,15 @@ def main():
     col1, col2, col3 = st.columns(3) 
     
     with col1:
-        wavelength = st.text_input("Wavelength")
+        wavelength = st.number_input("Wavelength")
         wavelength_unit = st.selectbox("Wavelength Unit", wavelength_units)
     
     with col2:
-        frequency = st.text_input("Frequency")
+        frequency = st.number_input("Frequency")
         frequency_unit = st.selectbox("Frequency Unit", frequency_units)
     
     with col3:
-        wavenumber = st.text_input("Wavenumber")
+        wavenumber = st.number_input("Wavenumber")
         wavenumber_unit = st.selectbox("Wavenumber Unit", wavenumber_units)
     
     speed_of_light_option = st.radio("Speed of Light", ('Air', 'Vacuum'))
@@ -134,15 +134,15 @@ def main():
     
     st.write("Converted Results:")
     converted_wavelength, converted_frequency, converted_wavenumber = st.columns(3)
-    converted_wavelength.text_input("Wavelength Result", value=str(float(converted_wavelength_value)*anti_conversion_factors[wavelength_unit]))
-    converted_frequency.text_input("Frequency Result", value=str(float(converted_frequency_value)*anti_conversion_factors[frequency_unit]))
-    converted_wavenumber.text_input("Wavenumber Result", value=str(float(converted_wavenumber_value)/anti_conversion_factors[wavenumber_unit]))
+    converted_wavelength.number_input("Wavelength Result", value=str(float(converted_wavelength_value)*anti_conversion_factors[wavelength_unit]))
+    converted_frequency.number_input("Frequency Result", value=str(float(converted_frequency_value)*anti_conversion_factors[frequency_unit]))
+    converted_wavenumber.number_input("Wavenumber Result", value=str(float(converted_wavenumber_value)/anti_conversion_factors[wavenumber_unit]))
 
     st.title("Doppler calculator")
-    mass = st.text_input("Mass of the isotope(in amu)")
-    laser=st.text_input("Laser frequncy (in cm-1)(will be doubled)")
-    Vs=st.text_input("Scanning Voltage")
-    Vc=st.text_input("Cooler Voltage")
+    mass = st.number_input("Mass of the isotope(in amu)")
+    laser=st.number_input("Laser frequncy (in cm-1)(will be doubled)")
+    Vs=st.number_input("Scanning Voltage")
+    Vc=st.number_input("Cooler Voltage")
     st.write("Doppler corrected frequency:")
     if st.button("Convert"):
         cor_freq=doppler_correction(mass,laser,Vs,Vc)[0]
@@ -153,29 +153,14 @@ def main():
         C=0
         alp=0
 
-    st.text_input("Doppler corrected frequency",value=str(cor_freq))
-    st.text_input("Doppler factor",value=str(C))
-    st.text_input("Alpha",value=str(alp))
+    st.number_input("Doppler corrected frequency",value=str(cor_freq))
+    st.number_input("Doppler factor",value=str(C))
+    st.number_input("Alpha",value=str(alp))
 
-def calculate_doppler_corrected_freq(coolervoltage, scanningvoltage, mass, laserwavenumber):
-    laserfreq = laserwavenumber * 2.99792458 * 1e10
-    alpha = (coolervoltage - scanningvoltage + 15.) / (mass * 931494102.42)
-    DopplerCorrectedFreq = laserfreq * (1 + alpha + (2 * alpha + alpha**2)**0.5)
-    return DopplerCorrectedFreq
 
-def main1():
-    st.title("Doppler Corrected Frequency Calculator")
-
-    coolervoltage = st.number_input("Cooler Voltage (V)", value=0.0)
-    scanningvoltage = st.number_input("Scanning Voltage (V)", value=0.0)
-    mass = st.number_input("Mass of Isotope (amu)", value=0.0)
-    laserwavenumber = st.number_input("Laser Wavenumber (cm-1)", value=0.0)
-
-    if st.button("Calculate"):
-        DopplerCorrectedFreq = calculate_doppler_corrected_freq(coolervoltage, scanningvoltage, mass, laserwavenumber)
-        st.success(f"The Doppler Corrected Frequency is: {DopplerCorrectedFreq}")
     
 
 
 if __name__ == "__main__":
-    main1()
+    main()
+
